@@ -6,22 +6,22 @@ var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
 
-    // Your username
+    
     user: "root",
 
-    // Your password
+   
     password: "MantaRay17",
     database: "bamazon_DB"
 });
 
-// connect to the mysql server and sql database
+
 connection.connect(function (err) {
     if (err) throw err;
-    // run the start function after the connection is made to prompt the user
+   
     start();
 });
 
-// function which prompts the user for what action they should take
+
 function start() {
     inquirer
         .prompt({
@@ -49,7 +49,7 @@ function adminCredentials() {
             message: "Please enter the administrative password. (Hint: It's DEFINITELY *NOT* 'password')",
         })
         .then(function (answer) {
-            // based on their answer, either call the bid or the post functions
+          
             if (answer.adminPassword == "password") {
                 startAdmin();
             }
@@ -61,22 +61,16 @@ function adminCredentials() {
 }
 
 function startCustomer() {
-    con.connect(function (err) {
+    connection.query("SELECT * FROM items", function (err, result, fields) {
         if (err) throw err;
-        con.query("SELECT * FROM items", function (err, result, fields) {
-            if (err) throw err;
-            console.log(result);
-        });
+        console.log(result);
     });
 }
 
 function startAdmin() {
-    con.connect(function (err) {
+    connection.query("SELECT * FROM items", function (err, result, fields) {
         if (err) throw err;
-        con.query("SELECT * FROM items", function (err, result, fields) {
-            if (err) throw err;
-            console.log(result);
-        });
+        console.log(result);
     })
     inquirer
         .prompt({
@@ -86,7 +80,7 @@ function startAdmin() {
             choices: ["Cleaning Supplies", "Pet Supplies", "Games", "Electronics"]
         })
         .then(function (answer) {
-            // based on their answer, either call the bid or the post functions
+
             if (answer.departments == "Cleaning Supplies") {
 
                 showCleaningSupplies();
@@ -104,13 +98,12 @@ function startAdmin() {
 }
 
 function showCleaningSupplies() {
-    con.connect(function (err) {
+
+    connection.query("SELECT item_department, address FROM customers", function (err, result, fields) {
         if (err) throw err;
-        con.query("SELECT item_department, address FROM customers", function (err, result, fields) {
-            if (err) throw err;
-            console.log(result[4, 5]);
-        });
+        console.log(result[4, 5]);
     });
+
     inquirer
         .prompt({
             name: "choices",
@@ -119,7 +112,6 @@ function showCleaningSupplies() {
             choices: ["Broom", "Dish Soap"]
         })
         .then(function (answer) {
-            // based on their answer, either call the bid or the post functions
             if (answer.choices === "Broom") {
                 inquirer
                     .prompt({
@@ -130,8 +122,8 @@ function showCleaningSupplies() {
                     });
 
 
-            console.log("Thank you! Your total is: $" + result[4].item_cost*answer.qty);
-                }
+                console.log("Thank you! Your total is: $" + result[4].item_cost * answer.qty);
+            }
         });
 }
 
